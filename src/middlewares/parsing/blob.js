@@ -1,7 +1,8 @@
 import Resource from '../../Resource';
 import b64 from '../../b64';
 
-const Url = window.URL || window.webkitURL;
+const root = typeof window === 'undefined' ? global : window;
+const Url = root.URL || root.webkitURL;
 
 // a middleware for transforming XHR loaded Blobs into more useful objects
 export function blobMiddlewareFactory() {

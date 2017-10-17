@@ -2,7 +2,8 @@ import parseUri from 'parse-uri';
 import Signal from 'mini-signals';
 
 // tests is CORS is supported in XHR, if not we need to use XDR
-const useXdr = !!(window.XDomainRequest && !('withCredentials' in (new XMLHttpRequest())));
+const root = typeof window === 'undefined' ? global : window
+const useXdr = !!(root.XDomainRequest && !('withCredentials' in (new XMLHttpRequest())));
 let tempAnchor = null;
 
 // some status constants
@@ -502,7 +503,7 @@ export default class Resource {
         if (this.metadata.loadElement) {
             this.data = this.metadata.loadElement;
         }
-        else if (type === 'image' && typeof window.Image !== 'undefined') {
+        else if (type === 'image' && typeof root.Image !== 'undefined') {
             this.data = new Image();
         }
         else {
@@ -533,7 +534,7 @@ export default class Resource {
         if (this.metadata.loadElement) {
             this.data = this.metadata.loadElement;
         }
-        else if (type === 'audio' && typeof window.Audio !== 'undefined') {
+        else if (type === 'audio' && typeof root.Audio !== 'undefined') {
             this.data = new Audio();
         }
         else {
@@ -767,7 +768,7 @@ export default class Resource {
             // if xml, parse into an xml document or div element
             else if (this.xhrType === Resource.XHR_RESPONSE_TYPE.DOCUMENT) {
                 try {
-                    if (window.DOMParser) {
+                    if (root.DOMParser) {
                         const domparser = new DOMParser();
 
                         this.data = domparser.parseFromString(text, 'text/xml');
@@ -819,7 +820,7 @@ export default class Resource {
         }
 
         // default is window.location
-        loc = loc || window.location;
+        loc = loc || root.location;
 
         if (!tempAnchor) {
             tempAnchor = document.createElement('a');
